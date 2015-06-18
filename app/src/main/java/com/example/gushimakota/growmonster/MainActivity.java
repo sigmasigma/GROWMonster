@@ -16,6 +16,7 @@ public class MainActivity extends ActionBarActivity {
     ImageView monster;
     private Bitmap bitImage;
     Button food,sport;
+    Resources resM;
 
 
 
@@ -26,10 +27,7 @@ public class MainActivity extends ActionBarActivity {
         monster=(ImageView)findViewById(R.id.monster);
         food=(Button)findViewById(R.id.food);
         sport=(Button)findViewById(R.id.sport);
-        Resources resM = getResources();
-        if(bitImage!=null){
-            bitImage.recycle();
-        }
+        resM = getResources();
         bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1_1);
         monster.setImageDrawable(null);
         monster.setImageBitmap(null);
@@ -37,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void food(View v){
-        Resources resM = getResources();
+        resM = getResources();
         if(bitImage!=null){
             bitImage.recycle();
             bitImage = null;
@@ -49,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void sport(View v){
-        Resources resM = getResources();
+        resM = getResources();
         if(bitImage!=null){
             bitImage.recycle();
             bitImage = null;
