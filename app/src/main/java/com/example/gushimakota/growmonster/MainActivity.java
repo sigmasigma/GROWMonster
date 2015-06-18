@@ -1,5 +1,8 @@
 package com.example.gushimakota.growmonster;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +14,7 @@ import android.widget.ImageView;
 
 public class MainActivity extends ActionBarActivity {
     ImageView monster;
+    private Bitmap bitImage;
     Button food,sport;
 
 
@@ -22,15 +26,38 @@ public class MainActivity extends ActionBarActivity {
         monster=(ImageView)findViewById(R.id.monster);
         food=(Button)findViewById(R.id.food);
         sport=(Button)findViewById(R.id.sport);
-        monster.setImageResource(R.drawable.form1_1);
+        Resources resM = getResources();
+        if(bitImage!=null){
+            bitImage.recycle();
+        }
+        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1_1);
+        monster.setImageDrawable(null);
+        monster.setImageBitmap(null);
+        monster.setImageBitmap(bitImage);
     }
 
     public void food(View v){
-        monster.setImageResource(R.drawable.form1_2);
+        Resources resM = getResources();
+        if(bitImage!=null){
+            bitImage.recycle();
+            bitImage = null;
+        }
+        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1_2);
+        monster.setImageDrawable(null);
+        monster.setImageBitmap(null);
+        monster.setImageBitmap(bitImage);
     }
 
     public void sport(View v){
-        monster.setImageResource(R.drawable.form1_4);
+        Resources resM = getResources();
+        if(bitImage!=null){
+            bitImage.recycle();
+            bitImage = null;
+        }
+        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1_4);
+        monster.setImageDrawable(null);
+        monster.setImageBitmap(null);
+        monster.setImageBitmap(bitImage);
     }
 
     @Override

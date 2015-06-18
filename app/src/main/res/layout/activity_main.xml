@@ -16,7 +16,6 @@
             android:layout_height="400dp"
             android:id="@+id/monster"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/form1_3"
             android:scaleType="fitCenter"
             android:layout_gravity="center" />
 
