@@ -28,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
         food=(Button)findViewById(R.id.food);
         sport=(Button)findViewById(R.id.sport);
         resM = getResources();
-        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1_1);
+        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1);
         monster.setImageDrawable(null);
         monster.setImageBitmap(null);
         monster.setImageBitmap(bitImage);
@@ -39,10 +39,10 @@ public class MainActivity extends ActionBarActivity {
         if(bitImage!=null){
             bitImage.recycle();
             bitImage = null;
+            monster.setImageDrawable(null);
+            monster.setImageBitmap(null);
         }
-        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1_2);
-        monster.setImageDrawable(null);
-        monster.setImageBitmap(null);
+        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form2);
         monster.setImageBitmap(bitImage);
     }
 
@@ -51,10 +51,10 @@ public class MainActivity extends ActionBarActivity {
         if(bitImage!=null){
             bitImage.recycle();
             bitImage = null;
+            monster.setImageDrawable(null);
+            monster.setImageBitmap(null);
         }
-        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1_4);
-        monster.setImageDrawable(null);
-        monster.setImageBitmap(null);
+        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form4);
         monster.setImageBitmap(bitImage);
     }
 
