@@ -1,8 +1,11 @@
 package com.example.gushimakota.growmonster;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,13 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.content.Context;
 
 
 public class MainActivity extends ActionBarActivity {
     ImageView monster;
-    private Bitmap bitImage;
-    Button food,sport;
+    Bitmap bitImage;
     Resources resM;
+    int hungry=3,muscle=0,tired=0,stress=0;
 
 
 
@@ -25,37 +29,38 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         monster=(ImageView)findViewById(R.id.monster);
-        food=(Button)findViewById(R.id.food);
-        sport=(Button)findViewById(R.id.sport);
         resM = getResources();
-        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form1);
+        SharedPreferences prefer = getSharedPreferences("Ref", MODE_PRIVATE);
+        Editor editor = prefer.edit();
+        editor.putInt("hungry",hungry);
+        editor.putInt("muscle",muscle);
+        editor.putInt("tired",tired);
+        editor.putInt("stress",stress);
+        editor.putInt("id",R.drawable.form1);
+        bitImage = BitmapFactory.decodeResource(resM, prefer.getInt("id", R.drawable.form1));
         monster.setImageDrawable(null);
         monster.setImageBitmap(null);
         monster.setImageBitmap(bitImage);
     }
 
     public void food(View v){
-        resM = getResources();
-        if(bitImage!=null){
-            bitImage.recycle();
-            bitImage = null;
-            monster.setImageDrawable(null);
-            monster.setImageBitmap(null);
+        hungry+=5;
+        if(hungry>10){
+            stress++;
         }
-        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form2);
-        monster.setImageBitmap(bitImage);
+
+//        resM = getResources();
+//        if(bitImage!=null){
+//            bitImage.recycle();
+//            bitImage = null;
+//            monster.setImageDrawable(null);
+//            monster.setImageBitmap(null);
+//        }
+//        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form2);
+//        monster.setImageBitmap(bitImage);
     }
 
     public void sport(View v){
-        resM = getResources();
-        if(bitImage!=null){
-            bitImage.recycle();
-            bitImage = null;
-            monster.setImageDrawable(null);
-            monster.setImageBitmap(null);
-        }
-        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form4);
-        monster.setImageBitmap(bitImage);
     }
 
     @Override
