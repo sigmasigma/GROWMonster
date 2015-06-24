@@ -23,12 +23,13 @@ import java.util.GregorianCalendar;
 
 
 public class MainActivity extends ActionBarActivity {
-    Calendar calendar_now,c1;
+    Calendar calendar_now;
     ImageView monster;
     TextView text;
     Bitmap bitImage;
     Resources resM;
-    int hungry,muscle,tired,stress,year,day,hour,min;
+    int hungry,muscle,tired,stress,year,day,hour,min,id;
+    boolean init;
     long time;
     SharedPreferences prefer;
     Editor editor;
@@ -43,38 +44,55 @@ public class MainActivity extends ActionBarActivity {
         prefer = getSharedPreferences("Ref", MODE_PRIVATE);
         editor = prefer.edit();
 
+        init = prefer.getBoolean("init", false);
         calendar_now = Calendar.getInstance();
         year = calendar_now.get(Calendar.YEAR);
         day = calendar_now.get(Calendar.DAY_OF_YEAR);
         hour = calendar_now.get(Calendar.HOUR);
         min = calendar_now.get(Calendar.MINUTE);
+
+        if(!init){
+            init_mons();
+        }
+
         time = ((year - prefer.getInt("year",year))*8760 +
                 (day-prefer.getInt("day", day))*24+
                 (hour - prefer.getInt("hour", hour)))*60 +
                 (min-prefer.getInt("min",min));
 
 
-        hungry = prefer.getInt("hungry",3);
-        muscle = prefer.getInt("muscle",3);
-        tired = prefer.getInt("tired", 3);
-        stress = prefer.getInt("stress",3);
-        if(hungry>=20) {
-            editor.putInt("mons_id", R.drawable.form2);
-            editor.commit();
-        }else if(hungry>=10){
-            editor.putInt("mons_id", R.drawable.form3);
-            editor.commit();
-        }else if(hungry>=3){
-            editor.putInt("mons_id", R.drawable.form1);
-            editor.commit();
-        }else{
-            editor.putInt("mons_id", R.drawable.form4);
-            editor.commit();
-        }
+
         bitImage = BitmapFactory.decodeResource(resM, prefer.getInt("mons_id", R.drawable.form1));
         monster.setImageDrawable(null);
         monster.setImageBitmap(null);
         monster.setImageBitmap(bitImage);
+    }
+
+    public void change_id(){
+
+    }
+
+    public void init_mons(){
+        resM = getResources();
+        prefer = getSharedPreferences("Ref", MODE_PRIVATE);
+        editor = prefer.edit();
+        id = R.drawable.egg;
+        hungry = 3;
+        muscle = 0;
+        stress = 0;
+        tired = 0;
+        editor.putInt("mons_id",id);
+        editor.putInt("hungry",hungry);
+        editor.putInt("muscle",muscle);
+        editor.putInt("stress",stress);
+        editor.putInt("tired",tired);
+        editor.putInt("year",year);
+        editor.putInt("day",day);
+        editor.putInt("hour",hour);
+        editor.putInt("min",min);
+
+        editor.commit();
+
     }
 
     public void food(View v){
