@@ -1,25 +1,20 @@
 package com.example.gushimakota.growmonster;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.content.Context;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -28,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
     TextView text;
     Bitmap bitImage;
     Resources resM;
-    int hungry,muscle,tired,stress,year,day,hour,min,id;
+    int hungry,muscle,tired,stress,year,day,hour,min,id,state;
     boolean init;
     long time;
     SharedPreferences prefer;
@@ -39,60 +34,100 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         monster=(ImageView)findViewById(R.id.monster);
+        text=(TextView)findViewById(R.id.textView);
 
         resM = getResources();
         prefer = getSharedPreferences("Ref", MODE_PRIVATE);
         editor = prefer.edit();
 
         init = prefer.getBoolean("init", false);
+
         calendar_now = Calendar.getInstance();
         year = calendar_now.get(Calendar.YEAR);
         day = calendar_now.get(Calendar.DAY_OF_YEAR);
         hour = calendar_now.get(Calendar.HOUR);
         min = calendar_now.get(Calendar.MINUTE);
-
         if(!init){
             init_mons();
         }
-
         time = ((year - prefer.getInt("year",year))*8760 +
                 (day-prefer.getInt("day", day))*24+
                 (hour - prefer.getInt("hour", hour)))*60 +
                 (min-prefer.getInt("min",min));
 
+        switch (prefer.getInt("state",-1)){
+            case 0:
+                change_id_1();
+        }
 
 
-        bitImage = BitmapFactory.decodeResource(resM, prefer.getInt("mons_id", R.drawable.form1));
+        bitImage = BitmapFactory.decodeResource(resM, prefer.getInt("mons_id", R.drawable.egg));
         monster.setImageDrawable(null);
         monster.setImageBitmap(null);
         monster.setImageBitmap(bitImage);
+//        text.setText(String.valueOf(time) + "," + String.valueOf(init)+",id="+String.valueOf(id));
     }
 
-    public void change_id(){
+    public void change_id_1(){
+                if(time>100){
+
+                    id = R.drawable.grave;
+                    state =-1;
+                    editor.putInt("mons_id", id);
+                    editor.putInt("state",state);
+                    editor.apply();
+                }else if(time>5){
+
+                }
 
     }
 
+    //タマゴに戻す初期化
     public void init_mons(){
-        resM = getResources();
-        prefer = getSharedPreferences("Ref", MODE_PRIVATE);
-        editor = prefer.edit();
         id = R.drawable.egg;
         hungry = 3;
         muscle = 0;
         stress = 0;
         tired = 0;
+        state = 0;
+        editor.putInt("state",state);
         editor.putInt("mons_id",id);
         editor.putInt("hungry",hungry);
         editor.putInt("muscle",muscle);
         editor.putInt("stress",stress);
         editor.putInt("tired",tired);
+        editor.putBoolean("init",true);
+        editor.apply();
+        setTime();
+    }
+
+    public void setTime(){
+        resM = getResources();
+        prefer = getSharedPreferences("Ref", MODE_PRIVATE);
+        editor = prefer.edit();
         editor.putInt("year",year);
         editor.putInt("day",day);
         editor.putInt("hour",hour);
-        editor.putInt("min",min);
+        editor.putInt("min", min);
+        editor.apply();
+    }
 
-        editor.commit();
+    //リセット
+    public void reset(View v){
+        resM = getResources();
+        prefer = getSharedPreferences("Ref", MODE_PRIVATE);
+        editor = prefer.edit();
+        init = false;
+        editor.putBoolean("init", false);
+        editor.apply();
 
+        //アクティビティの再起動
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
     }
 
     public void food(View v){
@@ -103,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
         editor = prefer.edit();
         editor.putInt("hungry",hungry);
         editor.putInt("stress", stress);
-        editor.commit();
+        editor.apply();
         //text.setText(String.valueOf(prefer.getInt("hungry",-1)));
 //        resM = getResources();
 //        if(bitImage!=null){
@@ -124,7 +159,7 @@ public class MainActivity extends ActionBarActivity {
         editor = prefer.edit();
         editor.putInt("hungry",hungry);
         editor.putInt("stress", stress);
-        editor.commit();
+        editor.apply();
         //text.setText(String.valueOf(prefer.getInt("hungry",-1)));
 
     }
