@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,10 +25,12 @@ public class MainActivity extends ActionBarActivity {
     Bitmap bitImage;
     Resources resM;
     int hungry,muscle,tired,stress,year,day,hour,min,id,state;
+    Button btn_sport,btn_food,btn_reset;
     boolean init;
     long time;
     SharedPreferences prefer;
     Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         monster=(ImageView)findViewById(R.id.monster);
         text=(TextView)findViewById(R.id.textView);
+        btn_sport = (Button)findViewById(R.id.sport);
+        btn_food = (Button)findViewById(R.id.food);
+        btn_reset = (Button)findViewById(R.id.reset);
 
         resM = getResources();
         prefer = getSharedPreferences("Ref", MODE_PRIVATE);
@@ -57,29 +63,87 @@ public class MainActivity extends ActionBarActivity {
 
         switch (prefer.getInt("state",-1)){
             case 0:
+                change_id_0();
+            case 1:
                 change_id_1();
+            case 4:
+                change_id_4();
         }
-
 
         bitImage = BitmapFactory.decodeResource(resM, prefer.getInt("mons_id", R.drawable.egg));
         monster.setImageDrawable(null);
         monster.setImageBitmap(null);
         monster.setImageBitmap(bitImage);
-//        text.setText(String.valueOf(time) + "," + String.valueOf(init)+",id="+String.valueOf(id));
+        text.setText("time=" + String.valueOf(time));
+        btn_reset.setVisibility(View.GONE);
+        if(state == -1){
+            dead();
+        }
     }
 
-    public void change_id_1(){
-                if(time>100){
+    public void dead(){
+        btn_sport.setVisibility(View.GONE);
+        btn_food.setVisibility(View.GONE);
+        btn_reset.setVisibility(View.VISIBLE);
+    }
 
+    public void change_id_0(){
+                if(time>10){
                     id = R.drawable.grave;
                     state =-1;
                     editor.putInt("mons_id", id);
+                    editor.putInt("state", state);
+                    editor.apply();
+                    setTime();
+                    return;
+                }else if(time>5){
+                    id = R.drawable.form4;
+                    state =4;
+                    editor.putInt("mons_id", id);
+                    editor.putInt("state", state);
+                    editor.apply();
+                    setTime();
+                    return;
+                }else if(time>0){
+                    id = R.drawable.form1;
+                    state =1;
+                    editor.putInt("mons_id", id);
                     editor.putInt("state",state);
                     editor.apply();
-                }else if(time>5){
-
+                    setTime();
+                    return;
                 }
+    }
 
+    public void change_id_1(){
+        if(time>3){
+            id = R.drawable.grave;
+            state =-1;
+            editor.putInt("mons_id", id);
+            editor.putInt("state", state);
+            editor.apply();
+            setTime();
+            return;
+        }else if(time>2){
+            id = R.drawable.form4;
+            state =4;
+            editor.putInt("mons_id", id);
+            editor.putInt("state", state);
+            editor.apply();
+            setTime();
+            return;
+        }
+    }
+
+    public void change_id_4(){
+        if(time>2){
+            id = R.drawable.grave;
+            state =-1;
+            editor.putInt("mons_id", id);
+            editor.putInt("state", state);
+            editor.apply();
+            return;
+        }
     }
 
     //タマゴに戻す初期化
@@ -96,11 +160,12 @@ public class MainActivity extends ActionBarActivity {
         editor.putInt("muscle",muscle);
         editor.putInt("stress",stress);
         editor.putInt("tired",tired);
-        editor.putBoolean("init",true);
+        editor.putBoolean("init", true);
         editor.apply();
         setTime();
     }
 
+    //時間を取得する
     public void setTime(){
         resM = getResources();
         prefer = getSharedPreferences("Ref", MODE_PRIVATE);
@@ -139,16 +204,6 @@ public class MainActivity extends ActionBarActivity {
         editor.putInt("hungry",hungry);
         editor.putInt("stress", stress);
         editor.apply();
-        //text.setText(String.valueOf(prefer.getInt("hungry",-1)));
-//        resM = getResources();
-//        if(bitImage!=null){
-//            bitImage.recycle();
-//            bitImage = null;
-//            monster.setImageDrawable(null);
-//            monster.setImageBitmap(null);
-//        }
-//        bitImage = BitmapFactory.decodeResource(resM, R.drawable.form2);
-//        monster.setImageBitmap(bitImage);
     }
 
     public void sport(View v){
@@ -160,8 +215,6 @@ public class MainActivity extends ActionBarActivity {
         editor.putInt("hungry",hungry);
         editor.putInt("stress", stress);
         editor.apply();
-        //text.setText(String.valueOf(prefer.getInt("hungry",-1)));
-
     }
 
     @Override

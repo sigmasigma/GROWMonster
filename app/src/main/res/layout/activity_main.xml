@@ -31,11 +31,13 @@
                 android:id="@+id/textView" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="reset"
-                android:id="@+id/button"
-                android:onClick="reset" />
+                android:text="生まれ変わる"
+                android:id="@+id/reset"
+                android:onClick="reset"
+                android:layout_weight="1"
+                android:layout_gravity="bottom" />
 
             <Button
                 android:layout_width="0dp"
