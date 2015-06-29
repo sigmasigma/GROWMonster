@@ -21,8 +21,8 @@
             android:gravity="center" />
 
         <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="322dp"
+            android:layout_height="322dp"
             android:id="@+id/monster"
             android:layout_centerHorizontal="true"
             android:scaleType="fitStart" />
@@ -32,11 +32,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="New Text"-->
+                <!--android:id="@+id/textView" />-->
 
             <Button
                 android:layout_width="0dp"

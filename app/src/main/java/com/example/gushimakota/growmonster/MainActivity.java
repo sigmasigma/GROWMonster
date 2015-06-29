@@ -17,22 +17,33 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.os.Handler;
 
 import java.util.Calendar;
 
 
 public class MainActivity extends ActionBarActivity {
+    private final Handler handler = new Handler();
     Calendar calendar_now;
     ImageView monster;
-    TextView text;
-    Bitmap bitImage;
+    //TextView text;
+    //Bitmap bitImage;
     Resources resM;
-    int hungry,muscle,tired,stress,year,day,hour,min,id,state;
+    int hungry,muscle,tired,stress,year,day,hour,min,id,state,animationFlag=0;
     Button btn_sport,btn_food,btn_reset;
     boolean init;
     long time;
     SharedPreferences prefer;
     Editor editor;
+
+    private final Runnable func= new Runnable() {
+        @Override
+        public void run() {
+            //ここに実行したい処理を記述
+            animation();
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
 
         //宣言
         monster=(ImageView)findViewById(R.id.monster);
-        text=(TextView)findViewById(R.id.textView);
+        //text=(TextView)findViewById(R.id.textView);
         btn_sport = (Button)findViewById(R.id.sport);
         btn_food = (Button)findViewById(R.id.food);
         btn_reset = (Button)findViewById(R.id.reset);
@@ -95,7 +106,7 @@ public class MainActivity extends ActionBarActivity {
                 break;
         }
 
-//        //デバッグ用文字列
+        //デバッグ用文字列
 //        text.setText("state=" + String.valueOf(prefer.getInt("state", -1)) + ",time=" + String.valueOf(time));
 
         if(state == 0){
@@ -104,8 +115,9 @@ public class MainActivity extends ActionBarActivity {
             dead();
         }else{
             //リセットボタン不可視化
-            btn_reset.setVisibility(View.GONE);
+            //btn_reset.setVisibility(View.GONE);
         }
+        animation();
     }
 
     //タマゴ状態でのボタンの不可視化
@@ -235,14 +247,12 @@ public class MainActivity extends ActionBarActivity {
     //----------------進化の実装ココマデ---------------------
 
     //アニメーションの表示
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
+
+    public void animation() {
+//        super.onWindowFocusChanged(hasFocus);
 
         ImageView img = (ImageView)findViewById(R.id.monster);
         // AnimationDrawableのXMLリソースを指定
-        //img.setBackgroundResource(id);
-
         switch (state){
             case 0:
                 img.setBackgroundResource(R.drawable.form_anim0);
@@ -330,6 +340,17 @@ public class MainActivity extends ActionBarActivity {
         editor.putInt("hungry",hungry);
         editor.putInt("stress", stress);
         editor.apply();
+        ImageView img = (ImageView)findViewById(R.id.monster);
+        btn_sport.setVisibility(View.GONE);
+        btn_food.setVisibility(View.GONE);
+        btn_reset.setVisibility(View.GONE);
+        img.setBackgroundResource(R.drawable.form_eat_1);
+        AnimationDrawable frameAnimation = (AnimationDrawable) img.getBackground();
+        frameAnimation.start();
+        handler.postDelayed(func, 3500);
+        btn_sport.setVisibility(View.VISIBLE);
+        btn_food.setVisibility(View.VISIBLE);
+        btn_reset.setVisibility(View.GONE);
     }
 
     //運動ボタン時の挙動

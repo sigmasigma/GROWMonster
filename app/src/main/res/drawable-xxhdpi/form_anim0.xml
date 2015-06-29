@@ -2,3 +2,4 @@
     <item android:drawable="@drawable/egg" android:duration="1000" />
     <item android:drawable="@drawable/egg_1" android:duration="1000" />
 </animation-list>
+
