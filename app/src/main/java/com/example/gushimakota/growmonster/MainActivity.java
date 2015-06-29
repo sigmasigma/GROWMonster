@@ -6,13 +6,16 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -31,73 +34,108 @@ public class MainActivity extends ActionBarActivity {
     SharedPreferences prefer;
     Editor editor;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //初期化
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //宣言
         monster=(ImageView)findViewById(R.id.monster);
         text=(TextView)findViewById(R.id.textView);
         btn_sport = (Button)findViewById(R.id.sport);
         btn_food = (Button)findViewById(R.id.food);
         btn_reset = (Button)findViewById(R.id.reset);
 
+        //SharedPreferenceの設定
         resM = getResources();
         prefer = getSharedPreferences("Ref", MODE_PRIVATE);
         editor = prefer.edit();
 
+        //初回起動時のチェック
         init = prefer.getBoolean("init", false);
 
+        //現在時刻の代入
         calendar_now = Calendar.getInstance();
         year = calendar_now.get(Calendar.YEAR);
         day = calendar_now.get(Calendar.DAY_OF_YEAR);
         hour = calendar_now.get(Calendar.HOUR);
         min = calendar_now.get(Calendar.MINUTE);
+
+        //初回起動時の初期化
         if(!init){
             init_mons();
         }
+
+        //前回起動時刻と現在時刻との差
         time = ((year - prefer.getInt("year",year))*8760 +
-                (day-prefer.getInt("day", day))*24+
+                (day-prefer.getInt("day", day))*24 +
                 (hour - prefer.getInt("hour", hour)))*60 +
                 (min-prefer.getInt("min",min));
 
-        switch (prefer.getInt("state",-1)){
+        //前回の状態の取得
+        state = prefer.getInt("state",-1);
+
+        //状態によって形態を変える条件が違うので分岐
+        switch (state){
             case 0:
                 change_id_0();
+                break;
             case 1:
                 change_id_1();
+                break;
+            case 2:
+                change_id_2();
+                break;
+            case 3:
+                change_id_3();
+                break;
             case 4:
                 change_id_4();
+                break;
         }
 
-        bitImage = BitmapFactory.decodeResource(resM, prefer.getInt("mons_id", R.drawable.egg));
-        monster.setImageDrawable(null);
-        monster.setImageBitmap(null);
-        monster.setImageBitmap(bitImage);
-        text.setText("time=" + String.valueOf(time));
-        btn_reset.setVisibility(View.GONE);
-        if(state == -1){
+//        //デバッグ用文字列
+//        text.setText("state=" + String.valueOf(prefer.getInt("state", -1)) + ",time=" + String.valueOf(time));
+
+        if(state == 0){
+            egg();
+        }else if(state == -1){
             dead();
+        }else{
+            //リセットボタン不可視化
+            btn_reset.setVisibility(View.GONE);
         }
     }
 
+    //タマゴ状態でのボタンの不可視化
+    public void egg(){
+        btn_sport.setVisibility(View.GONE);
+        btn_food.setVisibility(View.GONE);
+        btn_reset.setVisibility(View.GONE);
+    }
+
+    //dead状態でのボタンの不可視化、リセットボタンの可視化
     public void dead(){
         btn_sport.setVisibility(View.GONE);
         btn_food.setVisibility(View.GONE);
         btn_reset.setVisibility(View.VISIBLE);
     }
 
+    //----------------進化の実装ココカラ---------------------
     public void change_id_0(){
                 if(time>10){
-                    id = R.drawable.grave;
                     state =-1;
+//                    id = R.drawable.grave;
+                    id = R.drawable.form_animgrave;
                     editor.putInt("mons_id", id);
                     editor.putInt("state", state);
                     editor.apply();
                     setTime();
                     return;
                 }else if(time>5){
-                    id = R.drawable.form4;
+//                    id = R.drawable.form4;
+                    id = R.drawable.form_anim3;
                     state =4;
                     editor.putInt("mons_id", id);
                     editor.putInt("state", state);
@@ -105,7 +143,8 @@ public class MainActivity extends ActionBarActivity {
                     setTime();
                     return;
                 }else if(time>0){
-                    id = R.drawable.form1;
+//                    id = R.drawable.form1;
+                    id = R.drawable.form_anim1;
                     state =1;
                     editor.putInt("mons_id", id);
                     editor.putInt("state",state);
@@ -116,17 +155,63 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void change_id_1(){
-        if(time>3){
-            id = R.drawable.grave;
+        if(time>5){
+//            id = R.drawable.grave;
+//            id = R.drawable.form_animgrave;
             state =-1;
             editor.putInt("mons_id", id);
             editor.putInt("state", state);
             editor.apply();
             setTime();
             return;
-        }else if(time>2){
-            id = R.drawable.form4;
+        }else if(time>0){
+//            id = R.drawable.form4;
+//            id = R.drawable.form_anim2;
+            state =2;
+            editor.putInt("mons_id", id);
+            editor.putInt("state", state);
+            editor.apply();
+            setTime();
+            return;
+        }
+    }
+
+    public void change_id_2(){
+        if(time>10){
+            state =-1;
+//                    id = R.drawable.grave;
+//            id = R.drawable.form_animgrave;
+            editor.putInt("mons_id", id);
+            editor.putInt("state", state);
+            editor.apply();
+            setTime();
+            return;
+        }else if(time>0&&hungry<=5){
+//                    id = R.drawable.form4;
+            id = R.drawable.form_anim4;
             state =4;
+            editor.putInt("mons_id", id);
+            editor.putInt("state", state);
+            editor.apply();
+            setTime();
+            return;
+        }else if(time>0&&hungry>5){
+//                    id = R.drawable.form1;
+            id = R.drawable.form_anim3;
+            state =3;
+            editor.putInt("mons_id", id);
+            editor.putInt("state",state);
+            editor.apply();
+            setTime();
+            return;
+        }
+    }
+
+    public void change_id_3(){
+        if(time>2){
+            state =-1;
+//                    id = R.drawable.grave;
+            id = R.drawable.form_animgrave;
             editor.putInt("mons_id", id);
             editor.putInt("state", state);
             editor.apply();
@@ -137,7 +222,8 @@ public class MainActivity extends ActionBarActivity {
 
     public void change_id_4(){
         if(time>2){
-            id = R.drawable.grave;
+//            id = R.drawable.grave;
+            id = R.drawable.form_animgrave;
             state =-1;
             editor.putInt("mons_id", id);
             editor.putInt("state", state);
@@ -146,7 +232,46 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    //タマゴに戻す初期化
+    //----------------進化の実装ココマデ---------------------
+
+    //アニメーションの表示
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        ImageView img = (ImageView)findViewById(R.id.monster);
+        // AnimationDrawableのXMLリソースを指定
+        //img.setBackgroundResource(id);
+
+        switch (state){
+            case 0:
+                img.setBackgroundResource(R.drawable.form_anim0);
+                break;
+            case 1:
+                img.setBackgroundResource(R.drawable.form_anim1);
+                break;
+            case 2:
+                img.setBackgroundResource(R.drawable.form_anim2);
+                break;
+            case 3:
+                img.setBackgroundResource(R.drawable.form_anim3);
+                break;
+            case 4:
+                img.setBackgroundResource(R.drawable.form_anim4);
+                break;
+            case -1:
+                img.setBackgroundResource(R.drawable.form_animgrave);
+                break;
+        }
+
+        // AnimationDrawableを取得
+        AnimationDrawable frameAnimation = (AnimationDrawable) img.getBackground();
+
+        // アニメーションの開始
+        frameAnimation.start();
+    }
+
+    //初期化時の諸設定
     public void init_mons(){
         id = R.drawable.egg;
         hungry = 3;
@@ -177,7 +302,7 @@ public class MainActivity extends ActionBarActivity {
         editor.apply();
     }
 
-    //リセット
+    //リセットボタン時の挙動
     public void reset(View v){
         resM = getResources();
         prefer = getSharedPreferences("Ref", MODE_PRIVATE);
@@ -195,6 +320,7 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    //ご飯ボタン時の挙動
     public void food(View v){
         hungry+=5;
         if(hungry>10){
@@ -206,6 +332,7 @@ public class MainActivity extends ActionBarActivity {
         editor.apply();
     }
 
+    //運動ボタン時の挙動
     public void sport(View v){
         hungry-=3;
         if(hungry>10){
