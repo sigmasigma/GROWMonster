@@ -4,18 +4,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.os.Handler;
 
@@ -41,10 +37,13 @@ public class MainActivity extends ActionBarActivity {
         public void run() {
             //ここに実行したい処理を記述
             animation();
+            btn_sport.setVisibility(View.VISIBLE);
+            btn_food.setVisibility(View.VISIBLE);
+            btn_reset.setVisibility(View.GONE);
         }
     };
 
-
+    //起動時メソッド
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //初期化
@@ -115,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
             dead();
         }else{
             //リセットボタン不可視化
-            //btn_reset.setVisibility(View.GONE);
+            btn_reset.setVisibility(View.GONE);
         }
         animation();
     }
@@ -337,7 +336,7 @@ public class MainActivity extends ActionBarActivity {
             stress++;
         }
         editor = prefer.edit();
-        editor.putInt("hungry",hungry);
+        editor.putInt("hungry", hungry);
         editor.putInt("stress", stress);
         editor.apply();
         ImageView img = (ImageView)findViewById(R.id.monster);
@@ -347,10 +346,7 @@ public class MainActivity extends ActionBarActivity {
         img.setBackgroundResource(R.drawable.form_eat_1);
         AnimationDrawable frameAnimation = (AnimationDrawable) img.getBackground();
         frameAnimation.start();
-        handler.postDelayed(func, 3500);
-        btn_sport.setVisibility(View.VISIBLE);
-        btn_food.setVisibility(View.VISIBLE);
-        btn_reset.setVisibility(View.GONE);
+        handler.postDelayed(func, 4000);
     }
 
     //運動ボタン時の挙動
