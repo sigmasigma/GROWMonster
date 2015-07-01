@@ -12,18 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.os.Handler;
 
 import java.util.Calendar;
 
 
 public class MainActivity extends ActionBarActivity {
+    //フィールド宣言
     private final Handler handler = new Handler();
     Calendar calendar_now;
     ImageView monster;
-    //TextView text;
-    //Bitmap bitImage;
     Resources resM;
     int hungry,muscle,tired,stress,year,day,hour,min,id,state,animationFlag=0;
     Button btn_sport,btn_food,btn_reset;
@@ -31,7 +29,6 @@ public class MainActivity extends ActionBarActivity {
     long time;
     SharedPreferences prefer;
     Editor editor;
-
     private final Runnable func= new Runnable() {
         @Override
         public void run() {
@@ -246,7 +243,6 @@ public class MainActivity extends ActionBarActivity {
     //----------------進化の実装ココマデ---------------------
 
     //アニメーションの表示
-
     public void animation() {
 //        super.onWindowFocusChanged(hasFocus);
 
@@ -304,9 +300,9 @@ public class MainActivity extends ActionBarActivity {
         resM = getResources();
         prefer = getSharedPreferences("Ref", MODE_PRIVATE);
         editor = prefer.edit();
-        editor.putInt("year",year);
-        editor.putInt("day",day);
-        editor.putInt("hour",hour);
+        editor.putInt("year", year);
+        editor.putInt("day", day);
+        editor.putInt("hour", hour);
         editor.putInt("min", min);
         editor.apply();
     }
@@ -343,7 +339,20 @@ public class MainActivity extends ActionBarActivity {
         btn_sport.setVisibility(View.GONE);
         btn_food.setVisibility(View.GONE);
         btn_reset.setVisibility(View.GONE);
-        img.setBackgroundResource(R.drawable.form_eat_1);
+        switch(state){
+            case 1:
+                img.setBackgroundResource(R.drawable.form_eat1);
+                break;
+            case 2:
+                img.setBackgroundResource(R.drawable.form_eat2);
+                break;
+            case 3:
+                img.setBackgroundResource(R.drawable.form_eat3);
+                break;
+            case 4:
+                img.setBackgroundResource(R.drawable.form_eat4);
+                break;
+        }
         AnimationDrawable frameAnimation = (AnimationDrawable) img.getBackground();
         frameAnimation.start();
         handler.postDelayed(func, 4000);
@@ -359,6 +368,27 @@ public class MainActivity extends ActionBarActivity {
         editor.putInt("hungry",hungry);
         editor.putInt("stress", stress);
         editor.apply();
+        ImageView img = (ImageView)findViewById(R.id.monster);
+        btn_sport.setVisibility(View.GONE);
+        btn_food.setVisibility(View.GONE);
+        btn_reset.setVisibility(View.GONE);
+        switch(state){
+            case 1:
+                img.setBackgroundResource(R.drawable.form_sport1);
+                break;
+            case 2:
+                img.setBackgroundResource(R.drawable.form_sport2);
+                break;
+            case 3:
+                img.setBackgroundResource(R.drawable.form_sport3);
+                break;
+            case 4:
+                img.setBackgroundResource(R.drawable.form_sport4);
+                break;
+        }
+        AnimationDrawable frameAnimation = (AnimationDrawable) img.getBackground();
+        frameAnimation.start();
+        handler.postDelayed(func, 4000);
     }
 
     @Override
