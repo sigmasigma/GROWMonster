@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
     Calendar calendar_now;
     ImageView monster;
     Resources resM;
-    int hungry,muscle,tired,stress,year,day,hour,min,id,state,animationFlag=0;
+    int hungry,muscle,tired,stress,year,day,hour,min,state;
     Button btn_sport,btn_food,btn_reset;
     boolean init;
     long time;
@@ -32,7 +32,6 @@ public class MainActivity extends ActionBarActivity {
     private final Runnable func= new Runnable() {
         @Override
         public void run() {
-            //ここに実行したい処理を記述
             animation();
             btn_sport.setVisibility(View.VISIBLE);
             btn_food.setVisibility(View.VISIBLE);
@@ -49,7 +48,6 @@ public class MainActivity extends ActionBarActivity {
 
         //宣言
         monster=(ImageView)findViewById(R.id.monster);
-        //text=(TextView)findViewById(R.id.textView);
         btn_sport = (Button)findViewById(R.id.sport);
         btn_food = (Button)findViewById(R.id.food);
         btn_reset = (Button)findViewById(R.id.reset);
@@ -82,24 +80,43 @@ public class MainActivity extends ActionBarActivity {
 
         //前回の状態の取得
         state = prefer.getInt("state",-1);
+        hungry = prefer.getInt("hungry",0);
+        muscle = prefer.getInt("muscle",0);
+        stress = prefer.getInt("stress",0);
+        tired = prefer.getInt("tired",0);
 
-        //状態によって形態を変える条件が違うので分岐
-        switch (state){
-            case 0:
-                change_id_0();
-                break;
-            case 1:
-                change_id_1();
-                break;
-            case 2:
-                change_id_2();
-                break;
-            case 3:
-                change_id_3();
-                break;
-            case 4:
-                change_id_4();
-                break;
+        hungry -= time;
+        tired -= time;
+
+        if(hungry<0){
+            stress-=hungry;
+            hungry=0;
+        }
+        if(tired<0){
+            tired=0;
+        }
+
+        if(stress>6){
+            state=-1;
+        }else {
+            //状態によって形態を変える条件が違うので分岐
+            switch (state) {
+                case 0:
+                    change_id_0();
+                    break;
+                case 1:
+                    change_id_1();
+                    break;
+                case 2:
+                    change_id_2();
+                    break;
+                case 3:
+                    change_id_3();
+                    break;
+                case 4:
+                    change_id_4();
+                    break;
+            }
         }
 
         //デバッグ用文字列
@@ -113,6 +130,7 @@ public class MainActivity extends ActionBarActivity {
             //リセットボタン不可視化
             btn_reset.setVisibility(View.GONE);
         }
+        editor.apply();
         animation();
     }
 
@@ -134,109 +152,67 @@ public class MainActivity extends ActionBarActivity {
     public void change_id_0(){
                 if(time>10){
                     state =-1;
-//                    id = R.drawable.grave;
-                    id = R.drawable.form_animgrave;
-                    editor.putInt("mons_id", id);
                     editor.putInt("state", state);
                     editor.apply();
                     setTime();
-                    return;
-                }else if(time>5){
-//                    id = R.drawable.form4;
-                    id = R.drawable.form_anim3;
-                    state =4;
-                    editor.putInt("mons_id", id);
-                    editor.putInt("state", state);
-                    editor.apply();
-                    setTime();
-                    return;
                 }else if(time>0){
-//                    id = R.drawable.form1;
-                    id = R.drawable.form_anim1;
                     state =1;
-                    editor.putInt("mons_id", id);
                     editor.putInt("state",state);
                     editor.apply();
                     setTime();
-                    return;
                 }
     }
 
     public void change_id_1(){
-        if(time>5){
-//            id = R.drawable.grave;
-//            id = R.drawable.form_animgrave;
+        if(time>18){
             state =-1;
-            editor.putInt("mons_id", id);
             editor.putInt("state", state);
             editor.apply();
             setTime();
-            return;
-        }else if(time>0){
-//            id = R.drawable.form4;
-//            id = R.drawable.form_anim2;
-            state =2;
-            editor.putInt("mons_id", id);
-            editor.putInt("state", state);
-            editor.apply();
-            setTime();
-            return;
+        }else if(time>0) {
+            if (stress < 2 && hungry < 4 && muscle >5) {
+                state = 4;
+                editor.putInt("state", state);
+                editor.apply();
+                setTime();
+            }else if (stress > 4) {
+                state = 2;
+                editor.putInt("state", state);
+                editor.apply();
+                setTime();
+            }else{
+                state = 3;
+                editor.putInt("state", state);
+                editor.apply();
+                setTime();
+            }
         }
     }
+
 
     public void change_id_2(){
         if(time>10){
             state =-1;
-//                    id = R.drawable.grave;
-//            id = R.drawable.form_animgrave;
-            editor.putInt("mons_id", id);
             editor.putInt("state", state);
             editor.apply();
             setTime();
-            return;
-        }else if(time>0&&hungry<=5){
-//                    id = R.drawable.form4;
-            id = R.drawable.form_anim4;
-            state =4;
-            editor.putInt("mons_id", id);
-            editor.putInt("state", state);
-            editor.apply();
-            setTime();
-            return;
-        }else if(time>0&&hungry>5){
-//                    id = R.drawable.form1;
-            id = R.drawable.form_anim3;
-            state =3;
-            editor.putInt("mons_id", id);
-            editor.putInt("state",state);
-            editor.apply();
-            setTime();
-            return;
         }
     }
 
     public void change_id_3(){
         if(time>2){
             state =-1;
-//                    id = R.drawable.grave;
-            id = R.drawable.form_animgrave;
-            editor.putInt("mons_id", id);
             editor.putInt("state", state);
             editor.apply();
             setTime();
-            return;
         }
     }
 
     public void change_id_4(){
         if(time>2){
-//            id = R.drawable.grave;
-            id = R.drawable.form_animgrave;
             state =-1;
-            editor.putInt("mons_id", id);
             editor.putInt("state", state);
             editor.apply();
-            return;
         }
     }
 
@@ -278,14 +254,12 @@ public class MainActivity extends ActionBarActivity {
 
     //初期化時の諸設定
     public void init_mons(){
-        id = R.drawable.egg;
         hungry = 3;
         muscle = 0;
         stress = 0;
         tired = 0;
         state = 0;
         editor.putInt("state",state);
-        editor.putInt("mons_id",id);
         editor.putInt("hungry",hungry);
         editor.putInt("muscle",muscle);
         editor.putInt("stress",stress);
@@ -327,8 +301,9 @@ public class MainActivity extends ActionBarActivity {
 
     //ご飯ボタン時の挙動
     public void food(View v){
-        hungry+=5;
-        if(hungry>10){
+        if(hungry<8) {
+            hungry += 5;
+        }else{
             stress++;
         }
         editor = prefer.edit();
@@ -360,9 +335,20 @@ public class MainActivity extends ActionBarActivity {
 
     //運動ボタン時の挙動
     public void sport(View v){
-        hungry-=3;
-        if(hungry>10){
+        if(hungry>0) {
+            hungry -= 1;
+        }
+        if(hungry>7){
             stress+=2;
+        }
+        if(tired<5){
+            muscle+=3;
+            tired+=3;
+            stress-=2;
+        }else{
+            muscle-=1;
+            tired+=7;
+            stress+=3;
         }
         editor = prefer.edit();
         editor.putInt("hungry",hungry);
