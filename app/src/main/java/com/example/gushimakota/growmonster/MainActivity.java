@@ -23,10 +23,10 @@ public class MainActivity extends ActionBarActivity {
     Calendar calendar_now;
     ImageView monster;
     Resources resM;
-    int hungry,muscle,tired,stress,year,day,hour,min,state;
+    int hungry,muscle,tired,stress,year,day,hour,min,state,down;
     Button btn_sport,btn_food,btn_reset;
     boolean init;
-    long time;
+    int time;
     SharedPreferences prefer;
     Editor editor;
     private final Runnable func= new Runnable() {
@@ -85,8 +85,9 @@ public class MainActivity extends ActionBarActivity {
         stress = prefer.getInt("stress",0);
         tired = prefer.getInt("tired",0);
 
-        hungry -= time;
-        tired -= time;
+        down = (time%30);
+        hungry -= down;
+        tired -= (down%30);
 
         if(hungry<0){
             stress-=hungry;
