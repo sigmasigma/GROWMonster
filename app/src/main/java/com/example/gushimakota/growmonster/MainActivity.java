@@ -170,12 +170,12 @@ public class MainActivity extends ActionBarActivity {
             editor.apply();
             setTime();
         }else if(time>0) {
-            if (stress < 2 && hungry < 4 && muscle >5) {
+            if (stress < 2 && hungry < 4 && muscle >2) {
                 state = 4;
                 editor.putInt("state", state);
                 editor.apply();
                 setTime();
-            }else if (stress > 4) {
+            }else if (stress < 4) {
                 state = 2;
                 editor.putInt("state", state);
                 editor.apply();
@@ -302,13 +302,15 @@ public class MainActivity extends ActionBarActivity {
     //ご飯ボタン時の挙動
     public void food(View v){
         if(hungry<8) {
-            hungry += 5;
+            hungry += 3;
         }else{
             stress++;
         }
         editor = prefer.edit();
-        editor.putInt("hungry", hungry);
+        editor.putInt("hungry",hungry);
         editor.putInt("stress", stress);
+        editor.putInt("tired", tired);
+        editor.putInt("muscle", muscle);
         editor.apply();
         ImageView img = (ImageView)findViewById(R.id.monster);
         btn_sport.setVisibility(View.GONE);
@@ -353,6 +355,8 @@ public class MainActivity extends ActionBarActivity {
         editor = prefer.edit();
         editor.putInt("hungry",hungry);
         editor.putInt("stress", stress);
+        editor.putInt("tired", tired);
+        editor.putInt("muscle", muscle);
         editor.apply();
         ImageView img = (ImageView)findViewById(R.id.monster);
         btn_sport.setVisibility(View.GONE);
