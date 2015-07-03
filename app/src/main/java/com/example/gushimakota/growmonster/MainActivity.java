@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity {
         prefer = getSharedPreferences("Ref", MODE_PRIVATE);
         editor = prefer.edit();
 
-        //初回起動時のチェック
+        //初回起動時のチェックをする
         init = prefer.getBoolean("init", false);
 
         //現在時刻の代入
